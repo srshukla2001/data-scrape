@@ -14,7 +14,7 @@ export default function Home() {
     setAnalysis(null)
 
     const videoUrl = e.target.videoUrl.value
-    const BASE_URL = 'http://192.168.1.16:8000'
+    const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://192.168.1.16:8000'
     const API_URL = `${BASE_URL}/api/analyze`
 
     try {
