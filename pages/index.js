@@ -15,7 +15,7 @@ export default function Home() {
     setAnalysis(null)
 
     const videoUrl = e.target.videoUrl.value
-    const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://yt-backend-qe1s.onrender.com'
+    const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://192.168.2.103:8000'
     const API_URL = `${BASE_URL}/api/analyze`
 
     try {
@@ -55,8 +55,20 @@ export default function Home() {
         throw new Error(errorData.detail || 'Failed to analyze video')
       }
 
-      const data = await response.json()
-      setAnalysis(data)
+      const data = await response.json();
+      console.log(data)
+      // Clean the gemini_analysis field
+      if (data.gemini_analysis) {
+        const cleanedAnalysis = data.gemini_analysis
+          .replace(/```json/, '') // Remove the starting ```json
+          .replace(/```/, '');    // Remove the ending ```
+
+        data.gemini_analysis = JSON.parse(cleanedAnalysis); // Update the field with cleaned content
+      }
+
+      setAnalysis(data);
+      console.log(data);
+
     } catch (err) {
       console.error('Analysis error:', err)
       setError(err.message || 'An error occurred while analyzing the video. Please try again.')
@@ -64,7 +76,30 @@ export default function Home() {
       setIsLoading(false)
     }
   }
-
+  const renderContent = (content) => {
+    if (Array.isArray(content)) {
+      return content.map((item, i) => (
+        <div key={i} className="mb-3">
+          <span className="text-slate-900 font-medium text-lg">- {item}</span>
+        </div>
+      ));
+    } else if (typeof content === 'object' && content !== null) {
+      return (
+        <div className="space-y-4">
+          {Object.entries(content).map(([key, value], idx) => (
+            <div key={idx} className="space-y-2">
+              <div className="font-semibold text-indigo-600 text-lg capitalize">{key.replace(/_/g, ' ')}</div>
+              <div className="ml-4 text-slate-700 leading-relaxed text-base">
+                {renderContent(value)} {/* Recursively render nested content */}
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+    return <span className="text-slate-700 text-base">{content}</span>; // If it's a string or any other type, just display the content
+  };
+  
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="relative w-full">
@@ -118,8 +153,8 @@ export default function Home() {
                   type="submit"
                   disabled={isLoading}
                   className={`w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white py-4 px-8 rounded-xl font-semibold text-lg shadow-lg transition-all duration-300 transform ${isLoading
-                      ? 'opacity-75 cursor-not-allowed'
-                      : 'hover:shadow-blue-500/30 hover:-translate-y-0.5 active:translate-y-0 hover:scale-[1.01]'
+                    ? 'opacity-75 cursor-not-allowed'
+                    : 'hover:shadow-blue-500/30 hover:-translate-y-0.5 active:translate-y-0 hover:scale-[1.01]'
                     }`}
                 >
                   {isLoading ? (
@@ -163,8 +198,8 @@ export default function Home() {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                     <h3 className="text-xl font-semibold text-slate-700">SEO Performance Score</h3>
                     <span className={`text-3xl sm:text-4xl font-bold ${analysis.seo_score >= 80 ? 'text-emerald-600' :
-                        analysis.seo_score >= 60 ? 'text-amber-600' :
-                          'text-red-600'
+                      analysis.seo_score >= 60 ? 'text-amber-600' :
+                        'text-red-600'
                       }`}>
                       {analysis.seo_score}/100
                     </span>
@@ -172,8 +207,8 @@ export default function Home() {
                   <div className="w-full bg-slate-200 rounded-full h-3">
                     <div
                       className={`h-3 rounded-full transition-all duration-1000 ${analysis.seo_score >= 80 ? 'bg-emerald-500' :
-                          analysis.seo_score >= 60 ? 'bg-amber-500' :
-                            'bg-red-500'
+                        analysis.seo_score >= 60 ? 'bg-amber-500' :
+                          'bg-red-500'
                         }`}
                       style={{ width: `${analysis.seo_score}%` }}
                     ></div>
@@ -226,23 +261,32 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* Gemini AI Analysis */}
-                {analysis.gemini_analysis && (
-                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-100">
-                    <h3 className="text-2xl font-bold text-slate-800 mb-6">AI-Powered SEO Insights</h3>
-                    <div className="prose prose-slate prose-lg max-w-none">
-                      <ReactMarkdown className="text-slate-700 whitespace-pre-wrap">
-                        {analysis.gemini_analysis}
-                      </ReactMarkdown>
-                    </div>
-                  </div>
-                )}
+{analysis.gemini_analysis && (
+  <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-3xl p-8 border border-indigo-200 shadow-md space-y-8">
+    <h3 className="text-3xl font-semibold text-slate-900 mb-6 text-center">AI-Powered SEO Insights</h3>
+    <div className="space-y-6">
+      {Object.entries(analysis.gemini_analysis).map(([section, content], index) => (
+        <div key={index} className="bg-white rounded-lg p-6 shadow-sm border border-indigo-100">
+          <h4 className="text-xl font-medium text-indigo-800 mb-4 capitalize">{section.replace(/_/g, ' ')}</h4>
+          <p className="text-slate-700 text-base leading-relaxed whitespace-pre-wrap">
+            {renderContent(content)}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
+
+
+
+
 
                 {/* Transcript Status */}
                 <div className="flex justify-end">
                   <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${analysis.has_transcript
-                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                      : 'bg-amber-100 text-amber-800 border border-amber-200'
+                    ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                    : 'bg-amber-100 text-amber-800 border border-amber-200'
                     }`}>
                     {analysis.has_transcript ? '✓ Transcript Available' : '⚠ No Transcript Found'}
                   </span>
@@ -259,26 +303,26 @@ export default function Home() {
                     description: "Get deep insights into your video's SEO performance using advanced AI algorithms",
                     icon: 'M13 10V3L4 14h7v7l9-11h-7z'
                   },
-                {
-                  title: 'Smart Metrics',
-                description: 'Track and analyze key engagement metrics to optimize your content strategy',
-                icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'
+                  {
+                    title: 'Smart Metrics',
+                    description: 'Track and analyze key engagement metrics to optimize your content strategy',
+                    icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'
                   },
-                {
-                  title: 'Competitor Insights',
-                description: 'Understand how your content stacks up against competitors in your niche',
-                icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
+                  {
+                    title: 'Competitor Insights',
+                    description: 'Understand how your content stacks up against competitors in your niche',
+                    icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
                   }
                 ].map((feature, index) => (
-                <div key={index} className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group">
-                  <div className="text-blue-600 mb-6 transform transition-transform group-hover:scale-110">
-                    <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={feature.icon} />
-                    </svg>
+                  <div key={index} className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group">
+                    <div className="text-blue-600 mb-6 transform transition-transform group-hover:scale-110">
+                      <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={feature.icon} />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-800 mb-3">{feature.title}</h3>
+                    <p className="text-slate-600 leading-relaxed">{feature.description}</p>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-800 mb-3">{feature.title}</h3>
-                  <p className="text-slate-600 leading-relaxed">{feature.description}</p>
-                </div>
                 ))}
               </div>
             )}
