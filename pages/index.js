@@ -226,12 +226,12 @@ export default function Home() {
                       <h3 className="text-sm font-medium text-slate-500 mb-2">Views</h3>
                       <p className="text-xl text-slate-900 font-medium">{analysis.views.toLocaleString()}</p>
                     </div>
-                    <div className="bg-slate-50 rounded-2xl p-6">
+                    {/* <div className="bg-slate-50 rounded-2xl p-6">
                       <h3 className="text-sm font-medium text-slate-500 mb-2">Length</h3>
                       <p className="text-xl text-slate-900 font-medium">
                         {Math.floor(analysis.length / 60)}:{(analysis.length % 60).toString().padStart(2, '0')}
                       </p>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
 
