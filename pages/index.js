@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import ReactMarkdown from 'react-markdown';
-
+import { Analytics } from "@vercel/analytics/react"
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [analysis, setAnalysis] = useState(null)
@@ -103,6 +103,7 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="relative w-full">
         {/* Background Pattern */}
+        <Analytics/>
         <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,transparent,black)] pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
