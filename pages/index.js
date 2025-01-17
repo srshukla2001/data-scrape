@@ -21,7 +21,6 @@ export default function Home() {
     try {
       try {
         const healthCheck = await fetch(`${BASE_URL}/api/health`, {
-          signal: AbortSignal.timeout(5000),
           headers: {
             'Accept': 'application/json',
           },
