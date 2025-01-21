@@ -3,6 +3,10 @@
 import { useState } from 'react'
 import ReactMarkdown from 'react-markdown';
 import { Analytics } from "@vercel/analytics/react"
+import Header from '@/components/Header';
+import Features from '@/components/Features';
+import AiAnalysis from '@/components/AiAnalysis';
+import VideoDetails from '@/components/VideoDetails';
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [analysis, setAnalysis] = useState(null)
@@ -98,12 +102,13 @@ export default function Home() {
     }
     return <span className="text-slate-700 text-base">{content}</span>; // If it's a string or any other type, just display the content
   };
-  
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      <Header />
       <div className="relative w-full">
         {/* Background Pattern */}
-        <Analytics/>
+        <Analytics />
         <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,transparent,black)] pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
@@ -214,74 +219,10 @@ export default function Home() {
                     ></div>
                   </div>
                 </div>
-
                 {/* Video Details Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="bg-slate-50 rounded-2xl p-6">
-                    <h3 className="text-sm font-medium text-slate-500 mb-2">Title</h3>
-                    <p className="text-xl text-slate-900 font-medium line-clamp-2">{analysis.title}</p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-6">
-                    <div className="bg-slate-50 rounded-2xl p-6">
-                      <h3 className="text-sm font-medium text-slate-500 mb-2">Views</h3>
-                      <p className="text-xl text-slate-900 font-medium">{analysis.views.toLocaleString()}</p>
-                    </div>
-                    {/* <div className="bg-slate-50 rounded-2xl p-6">
-                      <h3 className="text-sm font-medium text-slate-500 mb-2">Length</h3>
-                      <p className="text-xl text-slate-900 font-medium">
-                        {Math.floor(analysis.length / 60)}:{(analysis.length % 60).toString().padStart(2, '0')}
-                      </p>
-                    </div> */}
-                  </div>
-                </div>
-
-                {/* Description */}
-                <div className="bg-slate-50 rounded-2xl p-6">
-                  <h3 className="text-lg font-semibold text-slate-800 mb-4">Description</h3>
-                  <p className="text-slate-700 whitespace-pre-wrap break-words leading-relaxed max-h-60 overflow-y-auto">
-                    {analysis.description}
-                  </p>
-                </div>
-
-                {/* Keywords */}
-                {analysis.keywords && analysis.keywords.length > 0 && (
-                  <div className="bg-slate-50 rounded-2xl p-6">
-                    <h3 className="text-lg font-semibold text-slate-800 mb-4">Target Keywords</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {analysis.keywords.map((keyword, index) => (
-                        <span
-                          key={index}
-                          className="px-4 py-2 rounded-full text-sm font-medium bg-blue-100 text-blue-800 border border-blue-200 transition-all duration-200 hover:bg-blue-200"
-                        >
-                          {keyword}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-{analysis.gemini_analysis && (
-  <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-3xl p-8 border border-indigo-200 shadow-md space-y-8">
-    <h3 className="text-3xl font-semibold text-slate-900 mb-6 text-center">AI-Powered SEO Insights</h3>
-    <div className="space-y-6">
-      {Object.entries(analysis.gemini_analysis).map(([section, content], index) => (
-        <div key={index} className="bg-white rounded-lg p-6 shadow-sm border border-indigo-100">
-          <h4 className="text-xl font-medium text-indigo-800 mb-4 capitalize">{section.replace(/_/g, ' ')}</h4>
-          <p className="text-slate-700 text-base leading-relaxed whitespace-pre-wrap">
-            {renderContent(content)}
-          </p>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
-
-
-
-
-
-
+                <VideoDetails analysis={analysis} />
+                {/*AI Analysis */}
+                <AiAnalysis analysis={analysis} renderContent={renderContent} />
                 {/* Transcript Status */}
                 <div className="flex justify-end">
                   <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${analysis.has_transcript
@@ -295,37 +236,7 @@ export default function Home() {
             )}
 
             {/* Features Section */}
-            {!analysis && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-                {[
-                  {
-                    title: "AI-Powered Analysis",
-                    description: "Get deep insights into your video's SEO performance using advanced AI algorithms",
-                    icon: 'M13 10V3L4 14h7v7l9-11h-7z'
-                  },
-                  {
-                    title: 'Smart Metrics',
-                    description: 'Track and analyze key engagement metrics to optimize your content strategy',
-                    icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'
-                  },
-                  {
-                    title: 'Competitor Insights',
-                    description: 'Understand how your content stacks up against competitors in your niche',
-                    icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
-                  }
-                ].map((feature, index) => (
-                  <div key={index} className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-lg p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group">
-                    <div className="text-blue-600 mb-6 transform transition-transform group-hover:scale-110">
-                      <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={feature.icon} />
-                      </svg>
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-800 mb-3">{feature.title}</h3>
-                    <p className="text-slate-600 leading-relaxed">{feature.description}</p>
-                  </div>
-                ))}
-              </div>
-            )}
+            <Features analysis={analysis} />
           </div>
         </div>
       </div>
