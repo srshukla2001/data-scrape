@@ -23,13 +23,27 @@ export default function Home() {
   //   "Stay tuned! | Use descriptive and keyword-rich tags."
   // ];
   const waitTexts = [
-    "Hang tight!",
-    "Almost there!",
-    "Processing magic!",
-    "Just a moment!",
-    "Crunching data!",
-    "Stay tuned!"
+    "Analyzing genius!",
+    "Optimizing magic!",
+    "SEO ninjas at work!",
+    "Cracking YouTube code!",
+    "AI is thinking...",
+    "Ranking the ranks!",
+    "Keyword magic!",
+    "Charting success!",
+    "Viral vibes loading!",
+    "Boosting brilliance!",
+    "Tag tuning time!",
+    "Data deep dive!",
+    "Content wizardry!",
+    "Algorithm decoding!",
+    "Video fame awaits!",
+    "Beating the bots!",
+    "Trend hacking!",
+    "Stay SEO-cool!",
+    "AI tweaking power!"
   ];
+
 
   useEffect(() => {
     if (isLoading) {
