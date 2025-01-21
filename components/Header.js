@@ -11,9 +11,9 @@ const Header = () => {
                     <Image
                         src={Logo}
                         alt="SEO Analyzer Logo"
-                        className="w-[10vw] h-[2vw]"
+                        className="w-[25vw] sm:w-[15vw] md:w-[10vw] h-auto"
                         height={2000}
-                        weight={2000}
+                        width={2000}
                     />
                     {/* <span className="text-2xl font-bold text-indigo-700">SEO Analyzer</span> */}
                 </div>
