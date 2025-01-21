@@ -22,7 +22,6 @@ function SeoTipsSlider() {
         "Collaborate with other creators in your niche to increase exposure.",
         "Optimize your video file name with target keywords before uploading.",
         "Use a compelling call-to-action (CTA) in your video and description.",
-        "Monitor your video analytics regularly to understand audience behavior and improve.",
         "Respond to comments to increase engagement and build community."
     ];
 
