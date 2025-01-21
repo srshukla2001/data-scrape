@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Features from '@/components/Features';
 import AiAnalysis from '@/components/AiAnalysis';
 import VideoDetails from '@/components/VideoDetails';
+import SeoTipsSlider from '@/components/SeoTipsSlider';
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [analysis, setAnalysis] = useState(null)
@@ -30,65 +31,6 @@ export default function Home() {
     "Stay tuned!"
   ];
 
-
-
-  function SeoTipsSlider() {
-    const seoTips = [
-      "Use engaging thumbnails to attract clicks.",
-      "Optimize video titles with relevant keywords.",
-      "Add timestamps for better viewer navigation.",
-      "Include closed captions for accessibility.",
-      "Share your video on social media platforms.",
-      "Use descriptive and keyword-rich tags.",
-      "Create custom thumbnails with bold text and relevant imagery.",
-      "Ensure your video description is clear, detailed, and keyword-optimized.",
-      "Encourage viewers to like, comment, and subscribe to boost engagement.",
-      "Use end screens and cards to promote related content.",
-      "Post consistent content to keep your audience engaged and grow your channel.",
-      "Focus on watch time as it significantly impacts ranking.",
-      "Include your target keywords in the first 25 words of your description.",
-      "Use high-quality audio and video for better user experience and retention.",
-      "Add your video to relevant playlists to increase visibility.",
-      "Embed your YouTube videos on your website or blog for more views.",
-      "Collaborate with other creators in your niche to increase exposure.",
-      "Optimize your video file name with target keywords before uploading.",
-      "Use a compelling call-to-action (CTA) in your video and description.",
-      "Monitor your video analytics regularly to understand audience behavior and improve.",
-      "Respond to comments to increase engagement and build community."
-    ];
-
-
-    const [currentTipIndex, setCurrentTipIndex] = useState(0);
-
-    useEffect(() => {
-      const interval = setInterval(() => {
-        setCurrentTipIndex((prevIndex) => (prevIndex + 1) % seoTips.length);
-      }, 5000); // Change tips every 5 seconds
-      return () => clearInterval(interval);
-    }, [seoTips.length]);
-
-    return (
-      <div className="relative overflow-hidden bg-gradient-to-r from-blue-100 to-indigo-100 py-4 rounded-xl shadow-lg">
-        <div
-          className="absolute inset-0 transition-transform duration-500 ease-in-out"
-          style={{ transform: `translateX(-${currentTipIndex * 100}%)` }}
-        >
-          <div className="flex">
-            {seoTips.map((tip, index) => (
-              <div
-                key={index}
-                className="flex-none w-full px-6 text-center"
-              >
-                <p className="text-lg font-medium text-slate-700">
-                  {tip}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
   useEffect(() => {
     if (isLoading) {
       const tipInterval = setInterval(() => {
@@ -196,12 +138,12 @@ export default function Home() {
         {/* Background Pattern */}
         <Analytics />
         <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,transparent,black)] pointer-events-none" />
-        <div className="mb-8">
-          <SeoTipsSlider />
-        </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
           {/* Header Section */}
           <div className="text-center mb-12 sm:mb-16 lg:mb-20 max-w-4xl mx-auto">
+        <div className="mb-8">
+        <SeoTipsSlider/>
+        </div>
             <div className="relative inline-block mb-4">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-700 to-violet-700 tracking-tight leading-none">
                 YouTube Video SEO Analyzer
