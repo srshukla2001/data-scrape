@@ -279,7 +279,7 @@ export default function Home() {
 
             {/* Analysis Results */}
             {analysis && (
-              <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-6 sm:p-8 lg:p-10 animate-fade-in space-y-8">
+              <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-4 sm:p-8 lg:p-10 animate-fade-in space-y-8">
                 <div className="border-b border-slate-200 pb-6">
                   <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-700">
                     Analysis Results
