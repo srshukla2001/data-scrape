@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown';
 import { Analytics } from "@vercel/analytics/react"
 import Header from '@/components/Header';
@@ -11,7 +11,26 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [analysis, setAnalysis] = useState(null)
   const [error, setError] = useState(null)
+  const [currentTipIndex, setCurrentTipIndex] = useState(0);
 
+  const seoTips = [
+    "Hang tight! | Tip: Use engaging thumbnails to attract clicks.",
+    "Almost there! | Optimize video titles with relevant keywords.",
+    "Processing magic! | Add timestamps for better viewer navigation.",
+    "Just a moment! | Include closed captions for accessibility.",
+    "Crunching data! | Share your video on social media platforms.",
+    "Stay tuned! | Use descriptive and keyword-rich tags."
+  ];
+
+  useEffect(() => {
+    if (isLoading) {
+      const tipInterval = setInterval(() => {
+        setCurrentTipIndex((prevIndex) => (prevIndex + 1) % seoTips.length);
+      }, 4000); // Rotate tips every 3 seconds
+
+      return () => clearInterval(tipInterval); // Cleanup interval on component unmount
+    }
+  }, [isLoading, seoTips.length]);
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
@@ -19,7 +38,7 @@ export default function Home() {
     setAnalysis(null)
 
     const videoUrl = e.target.videoUrl.value
-    const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://192.168.2.103:8000'
+    const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://yt-backend-qe1s.onrender.com'
     const API_URL = `${BASE_URL}/api/analyze`
 
     try {
@@ -168,7 +187,7 @@ export default function Home() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      <span>Analyzing Video...</span>
+                      <span>{seoTips[currentTipIndex]}</span>
                     </div>
                   ) : (
                     'Analyze with AI'
